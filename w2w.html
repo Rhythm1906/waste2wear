@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Waste 2 Wear — Home</title>
+  <meta name="description" content="Waste 2 Wear — sustainable accessories made from recycled filament. Waste turned into wearable craft." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================
+       Waste 2 Wear — Clean Rebuild (index.html)
+       - Fixed: login modal (no auto-open, closes on submit)
+       - Fixed: hero contrast & readability
+       - Fixed: footer/layout leakage removed
+       - Nav: pill highlight & active state
+       - Dark mode: readable surfaces (no pure black)
+       - Illustrations via external image URLs (light-toned, illustrative)
+       =============================== */
+
+    :root{
+      --bg: #F8F4EF;            /* page bg (light) */
+      --surface: #FFFFFF;       /* card / surface */
+      --panel: #F0E9E0;         /* subtle panel */
+      --muted: #DDD2C6;         /* muted borders */
+      --accent: #BFAE96;        /* warm accent */
+      --text: #222222;          /* main text */
+      --sub: #6b6b6b;           /* secondary text */
+      --shadow: 0 12px 30px rgba(30,25,20,0.06);
+      --glass: rgba(255,255,255,0.6);
+      --radius: 12px;
+      --max-width: 1200px;
+      --transition: 220ms cubic-bezier(.2,.9,.2,1);
+    }
+
+    /* Dark theme variables */
+    [data-theme="dark"]{
+      --bg: #0f1418;
+      --surface: #15191c;
+      --panel: #1c2226;
+      --muted: #22292d;
+      --accent: #8f7a63;
+      --text: #f3efe9;
+      --sub: #bfb9b4;
+      --shadow: 0 14px 40px rgba(0,0,0,0.6);
+      --glass: rgba(255,255,255,0.04);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      line-height:1.45;
+      transition: background var(--transition), color var(--transition);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 1rem}
+    h1,h2,h3{font-family:"Playfair Display", serif;margin:0}
+    p{margin:0}
+
+    /* reveal on scroll */
+    .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.show{opacity:1;transform:none}
+
+    /* ---------- Header ---------- */
+    header{
+      position:sticky;top:0;z-index:80;padding:.9rem 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.32));
+      backdrop-filter: blur(10px) saturate(120%);
+      border-bottom:1px solid rgba(0,0,0,0.04);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    /* dark: aeroglass light header */
+    [data-theme="dark"] header{
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.75rem}
+    .logo-placeholder{width:48px;height:48px;border-radius:10px;background:linear-gradient(180deg,var(--muted),var(--accent));display:flex;align-items:center;justify-content:center;color:var(--text);font-weight:700;box-shadow:var(--shadow)}
+    .site-title{font-weight:700;font-size:1.05rem}
+    nav ul{display:flex;gap:0.6rem;align-items:center;list-style:none;margin:0;padding:0}
+
+    nav a{
+      padding:.45rem .8rem;border-radius:999px;display:inline-block;font-weight:600;color:var(--text);position:relative;transition:all 200ms;
+    }
+
+    /* Pill hover highlight */
+    nav a:hover{
+      background: rgba(255,255,255,0.28);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(10,10,10,0.04);
+    }
+    [data-theme="dark"] nav a:hover{ background: rgba(255,255,255,0.10); }
+
+    /* Active nav (solid pill + small accent bar) */
+    nav a.active{
+      background: linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.14));
+      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+    }
+    [data-theme="dark"] nav a.active{ background: rgba(255,255,255,0.08); }
+    nav a.active::after{
+      content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:-8px;width:34px;height:4px;border-radius:4px;background:var(--accent);
+      box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    .actions{display:flex;gap:.6rem;align-items:center}
+    .theme-toggle{width:44px;height:44px;border-radius:10px;border:none;background:transparent;display:flex;align-items:center;justify-content:center}
+    .theme-icon{width:20px;height:20px;transition:transform .35s,opacity .25s}
+    .theme-icon.hide{opacity:0;transform:translateY(-6px) scale(.96);pointer-events:none}
+    .theme-icon.show{opacity:1}
+
+    .user-wrap{position:relative}
+    .user-btn{padding:.45rem .8rem;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--text)}
+    .user-dropdown{position:absolute;right:0;top:56px;background:var(--surface);border-radius:10px;padding:.4rem;box-shadow:var(--shadow);display:none;min-width:200px;z-index:200}
+    .user-dropdown a{display:block;padding:.55rem;border-radius:8px;color:var(--text)}
+    .user-dropdown a:hover{background:var(--panel)}
+
+    /* ---------- HERO RIBBON ---------- */
+    .hero{
+      margin-top:1rem;border-radius:18px;overflow:hidden;position:relative;height:400px;
+      display:flex;align-items:center;background:linear-gradient(135deg, rgba(191,174,150,0.06), rgba(228,222,215,0.02));
+    }
+    /* external background image + dark gradient overlay for readable text */
+    .hero-bg{
+      position:absolute;inset:0;background-size:cover;background-position:center;filter: blur(6px) saturate(.95);opacity:1;
+      /* example illustrative image (unsplash-style) — replace later with your own images if desired */
+      background-image: url('https://static.fibre2fashion.com//articleresources/images/71/7074/SAdobeStock_247321133_Small.jpg');
+    }
+    .hero-overlay{
+      position:absolute;inset:0;
+      background: linear-gradient(180deg, rgba(24,20,18,0.20), rgba(24,20,18,0.06));
+      /* On light mode we want a soft beige overlay to keep hero light but text readable */
+      mix-blend-mode: normal;
+      pointer-events:none;
+    }
+    [data-theme="light"] .hero-overlay{
+      background: linear-gradient(180deg, rgba(244,239,232,0.60), rgba(244,239,232,0.28));
+    }
+    [data-theme="dark"] .hero-overlay{
+      background: linear-gradient(180deg, rgba(8,8,8,0.42), rgba(8,8,8,0.12));
+    }
+
+/* -------------------------------
+   HERO SECTION — COMPLETE CSS
+--------------------------------*/
+
+/* Left side */
+.hero-left{
+  flex: 1;
+  color: var(--surface);
+}
+
+/* Title text */
+.hero-title{
+  font-size: 2.4rem;
+  line-height: 1.02;
+  color: var(--surface);
+  text-shadow: 0 10px 30px rgba(4,4,4,0.28);
+}
+
+/* Subtitle */
+.hero-sub{
+  margin-top: 0.6rem;
+  color: var(--surface);
+  opacity: 0.95;
+  max-width: 680px;
+}
+
+/* CTA buttons container */
+.hero-ctas{
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+/* Primary CTA */
+.cta-primary{
+  background: var(--surface);
+  padding: 0.6rem 0.95rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Ghost CTA */
+.cta-ghost{
+  padding: 0.6rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: var(--surface);
+  font-weight: 600;
+}
+
+/* --------------------------------
+   FIXED HERO LAYOUT (important!)
+---------------------------------*/
+.hero-inner{
+  display: flex;
+  align-items: flex-start;   /* keeps right box aligned high */
+  justify-content: space-between;
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 2.4rem 1rem;
+}
+
+/* --------------------------------
+   Right side glass card
+---------------------------------*/
+.hero-right{
+  width: 420px;
+  padding: 1rem;
+  border-radius: 14px;
+  background: linear-gradient(
+      140deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.02)
+  );
+  box-shadow: var(--shadow);
+  align-self: flex-start; /* stays aligned to the top */
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+
+/* Dark mode version */
+[data-theme="dark"] .hero-right{
+  background: linear-gradient(
+      180deg,
+      rgba(255,255,255,0.04),
+      rgba(255,255,255,0.01)
+  );
+  backdrop-filter: blur(22px) saturate(200%);
+  -webkit-backdrop-filter: blur(22px) saturate(200%);
+}
+
+
+
+    /* ---------- HOW IT WORKS ---------- */
+    .section{padding:2.4rem 0}
+    .section-header{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:1rem}
+    .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .step{background:var(--surface);padding:1.2rem;border-radius:12px;box-shadow:var(--shadow);text-align:center}
+    .ico{width:56px;height:56px;border-radius:12px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--panel),transparent);color:var(--text)}
+
+    /* timeline horizontal */
+    .timeline-wrap{margin-top:1.4rem;overflow:hidden}
+    .timeline{display:flex;gap:1rem;overflow:auto;padding:1rem 0}
+    .timeline-card{min-width:260px;background:var(--surface);border-radius:12px;padding:1rem;box-shadow:var(--shadow);flex:0 0 auto;display:flex;gap:.8rem;align-items:center}
+
+    /* showcase & gallery */
+    .showcase-strip{display:flex;gap:1rem;margin-top:1rem;align-items:center}
+    .showcase-img{flex:1;background:var(--surface);border-radius:12px;padding:1rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;height:120px;overflow:hidden}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+    .gallery-item{background:var(--surface);border-radius:12px;padding:.6rem;box-shadow:var(--shadow);height:140px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+    /* products */
+    .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+    .product-card{background:var(--surface);padding:1rem;border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.6rem}
+    .product-media{height:140px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:linear-gradient(180deg,var(--panel),transparent)}
+    .product-meta{display:flex;justify-content:space-between;align-items:center}
+    .product-actions{display:flex;gap:.5rem}
+
+    /* news */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+    .card{background:var(--surface);padding:1rem;border-radius:12px;box-shadow:var(--shadow)}
+
+    /* footer */
+    footer{padding:2rem 0;margin-top:2rem;border-top:1px solid var(--muted);background:transparent}
+    .footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:start}
+    .legal{margin-top:1rem;text-align:center;color:var(--sub)}
+
+    /* cart drawer off-canvas (hidden by default) */
+    .cart-drawer{position:fixed;right:-420px;top:0;height:100vh;width:380px;background:var(--surface);box-shadow:0 20px 60px rgba(10,10,10,0.12);transition:right .36s cubic-bezier(.2,.9,.2,1);z-index:90;padding:1rem;display:flex;flex-direction:column}
+    .cart-drawer.open{right:0}
+
+    /* small helpers */
+    .muted{color:var(--sub)}
+    .small{font-size:.92rem;padding:.45rem .6rem;border-radius:8px;border:1px solid var(--muted);background:transparent}
+    @media (max-width:1000px){
+      .products-grid{grid-template-columns:repeat(3,1fr)}
+      .how-steps{grid-template-columns:1fr}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:680px){
+      nav ul{display:none}
+      .products-grid{grid-template-columns:repeat(2,1fr)}
+      .hero{height:420px}
+      .gallery{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <!-- Header -->
+  <header role="banner" aria-label="Waste 2 Wear header">
+    <div class="container nav" style="align-items:center">
+      <div class="brand">
+        <div class="logo-placeholder" aria-hidden="true">W2W</div>
+        <div>
+          <div class="site-title">Waste 2 Wear</div>
+          <div class="muted" style="font-size:.9rem">Sustainable accessories</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html" class="nav-link active">Home</a></li>
+          <li><a href="shop.html" class="nav-link">Shop</a></li>
+          <li><a href="about.html" class="nav-link">About Us</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg id="sunIcon" class="theme-icon show" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="4.1"></circle><g stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M12 2.6v1.8M12 19.6v1.8M4.2 12H2.4M21.6 12h-1.8M5.6 5.6L4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4L4.2 19.8M19.8 4.2l-1.4 1.4"/></g></svg>
+          <svg id="moonIcon" class="theme-icon hide" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M21 12.8A8.8 8.8 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+        </button>
+
+        <div class="user-wrap" id="userWrap">
+          <button id="loginBtn" class="user-btn" aria-haspopup="true" aria-expanded="false">Login</button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <a href="profile.html" id="menuProfile">Profile</a>
+            <a href="orders.html" id="menuOrders">Order History</a>
+            <a href="#" id="menuLogout">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="main" class="container" style="padding-top:1rem; padding-bottom:3rem;">
+
+    <!-- HERO -->
+    <section class="hero reveal" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-inner container">
+
+      <div class="hero-left">
+          <h1 class="hero-title">From waste to filament — to wearable craft</h1>
+          <p class="hero-sub">
+            We collect recycled plastics, reprocess them into premium 3D-print filament, 
+            then design and finish accessories that celebrate durability and minimal design.
+          </p>
+
+          <div class="hero-ctas">
+            <a class="cta-primary" href="shop.html">Shop the Collection</a>
+            <a class="cta-ghost" href="about.html">Our Process</a>
+          </div>
+      </div>
+
+      <aside class="hero-right" aria-hidden="false">
+          <img src="https://www.bridgewaterstudio.net/hubfs/Blog_Images/Campaign%2002/3d-printing-history-featured.jpg"
+               alt="Filament and printing illustration"
+               style="width:100%;height:200px;object-fit:cover;border-radius:10px" />
+
+          <div style="margin-top:1rem" class="muted">
+            See how we turn recycled plastics into consistent filament and print-ready materials.
+          </div>
+
+          <div style="margin-top:1rem;display:flex;gap:.5rem">
+            <a class="small" href="news.html">Read about the filament</a>
+            <a class="small" href="about.html">Our partners</a>
+          </div>
+      </aside>
+
+  </div>
+</section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="section reveal" id="how">
+      <div class="section-header">
+        <div>
+          <h2>How it works</h2>
+          <div class="muted" style="margin-top:.4rem">A traceable, simple process — from waste to wear.</div>
+        </div>
+      </div>
+
+      <div class="how-steps">
+        <div class="step">
+          <div class="ico" aria-hidden="true">
+            <img src="recycle logo.png" alt="" style="width:34px;height:34px;object-fit:cover;border-radius:6px" />
+          </div>
+          <h4 style="margin-top:.6rem">Collect & Sort</h4>
+          <p class="muted" style="margin-top:.4rem">We source high-quality post-consumer plastics and prepare them for extrusion.</p>
+        </div>
+
+        <div class="step">
+          <div class="ico" aria-hidden="true">
+            <img src="extrude.png" alt="" style="width:34px;height:34px;object-fit:cover;border-radius:6px" />
+          </div>
+          <h4 style="margin-top:.6rem">Extrude Filament</h4>
+          <p class="muted" style="margin-top:.4rem">Material is cleaned, melted, and extruded into consistent filament for printing.</p>
+        </div>
+
+        <div class="step">
+          <div class="ico" aria-hidden="true">
+            <img src="finish.png" alt="" style="width:34px;height:34px;object-fit:cover;border-radius:6px" />
+          </div>
+          <h4 style="margin-top:.6rem">Print & Finish</h4>
+          <p class="muted" style="margin-top:.4rem">Printed parts are polished, assembled, and quality-checked by hand.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE (horizontal scroll) -->
+    <section class="section reveal" id="timeline">
+      <div class="section-header">
+        <div>
+          <h2>The journey of a piece</h2>
+          <div class="muted" style="margin-top:.4rem">Swipe or scroll — watch the transformation.</div>
+        </div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline" tabindex="0" aria-label="Material timeline">
+          <div class="timeline-card">
+            <div class="dot" style="width:44px;height:44px;border-radius:999px;background:linear-gradient(180deg,#EDE6DE,#D9CBB8);display:flex;align-items:center;justify-content:center">Pl</div>
+            <div>
+              <strong>Post-consumer plastic</strong>
+              <div class="muted" style="margin-top:.35rem">Collected & cleaned</div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="dot" style="width:44px;height:44px;border-radius:999px;background:linear-gradient(180deg,#D9CBB8,#BFAE96);display:flex;align-items:center;justify-content:center">Ex</div>
+            <div>
+              <strong>Extrusion</strong>
+              <div class="muted" style="margin-top:.35rem">Melted into filament</div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="dot" style="width:44px;height:44px;border-radius:999px;background:linear-gradient(180deg,#CBBBA8,#A99A80);display:flex;align-items:center;justify-content:center">3D</div>
+            <div>
+              <strong>3D printing</strong>
+              <div class="muted" style="margin-top:.35rem">Precision prints</div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="dot" style="width:44px;height:44px;border-radius:999px;background:linear-gradient(180deg,#EDE6DE,#D9CBB8);display:flex;align-items:center;justify-content:center">Fn</div>
+            <div>
+              <strong>Finish</strong>
+              <div class="muted" style="margin-top:.35rem">Hand polish & assembly</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWCASE STRIP -->
+    <section class="section reveal" id="showcase">
+      <div class="section-header">
+        <div>
+          <h2>From material to object</h2>
+          <div class="muted" style="margin-top:.4rem">A few steps shown visually.</div>
+        </div>
+      </div>
+
+      <div class="showcase-strip">
+        <div class="showcase-img">
+          <img src="https://images.unsplash.com/photo-1526401485004-2a3d5a9f1c5b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a2f7d7b9b8b6c3d2e1f0a1b2c3d4e5f" alt="Recycled material" style="width:100%;height:100%;object-fit:cover;border-radius:10px" />
+        </div>
+        <div class="showcase-img">
+          <img src="https://images.unsplash.com/photo-1581093448791-9c1b2e4e2a1d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4b3c2d1a9f8e7d6c5b4a3f2e1d0c9b8a" alt="Filament extrusion" style="width:100%;height:100%;object-fit:cover;border-radius:10px" />
+        </div>
+        <div class="showcase-img">
+          <img src="https://images.unsplash.com/photo-1532619675605-0f4a3d2b9c6b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=7e6d5c4b3a2b1c0d9e8f7a6b5c4d3e2f" alt="3D printing" style="width:100%;height:100%;object-fit:cover;border-radius:10px" />
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP HIGHLIGHTS -->
+    <section class="section reveal" id="shopPreview">
+      <div class="section-header">
+        <div>
+          <h2>Shop Highlights</h2>
+          <div class="muted" style="margin-top:.4rem">Selected pieces — click the product name to open the product page.</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <label for="categorySelect" class="muted">Category</label>
+          <select id="categorySelect" aria-label="Filter products">
+            <option value="all">All</option>
+            <option value="pendant">Pendant</option>
+            <option value="keychain">Keychain</option>
+            <option value="earrings">Earrings</option>
+            <option value="bracelet">Bracelet</option>
+          </select>
+          <a id="openCategoryNewTab" class="small" href="shop.html" target="_blank" rel="noopener">Open in new tab</a>
+        </div>
+      </div>
+
+      <div class="products-grid" id="productsGrid" aria-live="polite"></div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section reveal" id="gallery">
+      <div class="section-header">
+        <div>
+          <h2>Craftsmanship gallery</h2>
+          <div class="muted" style="margin-top:.4rem">Close details from production and finishing.</div>
+        </div>
+      </div>
+
+      <div class="gallery">
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=4b2a8f1c1f7e3b4a8c9d1f0a" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8f6e5d4c3b2a1b0c9e8d7f6a" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f2b1a0c9d8e7f6a5b4c3d2e" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px" /></div>
+      </div>
+    </section>
+
+    <!-- NEWS & TESTIMONIALS -->
+    <section class="section reveal" id="newsTestimonials">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start">
+        <div>
+          <h3>News & insights</h3>
+          <div class="cards">
+            <article class="card">
+              <div style="display:flex;gap:.6rem;align-items:center">
+                <div style="width:76px;height:56px;border-radius:8px;overflow:hidden"><img src="https://images.unsplash.com/photo-1548705678-4b1c9e1d2a3f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a7b6c5d4e3f2a1b0c9d8e7f" alt="" style="width:100%;height:100%;object-fit:cover" /></div>
+                <div>
+                  <h4 style="margin:0">Small batch, big impact</h4>
+                  <p class="muted" style="margin-top:.4rem">Why limited runs reduce waste and elevate finish.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div style="display:flex;gap:.6rem;align-items:center">
+                <div style="width:76px;height:56px;border-radius:8px;overflow:hidden"><img src="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b8c7d6e5f4a3b2c1d0e9f8a" alt="" style="width:100%;height:100%;object-fit:cover" /></div>
+                <div>
+                  <h4 style="margin:0">Filament spotlight</h4>
+                  <p class="muted" style="margin-top:.4rem">How we process plastics into reliable filament.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div style="display:flex;gap:.6rem;align-items:center">
+                <div style="width:76px;height:56px;border-radius:8px;overflow:hidden"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a5b4c3d2e1f0a9b8c7d6e5f" alt="" style="width:100%;height:100%;object-fit:cover" /></div>
+                <div>
+                  <h4 style="margin:0">Design notes</h4>
+                  <p class="muted" style="margin-top:.4rem">Simple forms and careful finishing.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="card">
+          <h4>Testimonials</h4>
+          <p class="muted" style="margin-top:.6rem">“Lightweight, premium feel — love the story behind it.”</p>
+          <p class="muted" style="margin-top:.6rem">“Great concept. The finish is better than expected.”</p>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Navigate</h4>
+          <div style="margin-top:.6rem">
+            <a href="index.html" class="muted">Home</a><br>
+            <a href="shop.html" class="muted">Shop</a><br>
+            <a href="about.html" class="muted">About Us</a><br>
+            <a href="contact.html" class="muted">Contact</a><br>
+            <a href="terms.html" class="muted">Terms of Service</a><br>
+            <a href="privacy.html" class="muted">Privacy Policy</a>
+          </div>
+        </div>
+
+        <div>
+          <h4>Contact</h4>
+          <div class="muted" style="margin-top:.5rem">Email: <a href="mailto:support@waste2wear.com">waste2wear@gmail.com</a></div>
+          <div class="muted" style="margin-top:.4rem">Phone: +91 69420 69420</div>
+          <div class="muted" style="margin-top:.4rem">Address: NIIT University, Neemrana, Rajasthan, 301705</div>
+        </div>
+
+        <div>
+          <h4>Our mission</h4>
+          <p class="muted" style="margin-top:.5rem">We design accessories using filament made from recycled plastics. Minimal design, durable finish.</p>
+        </div>
+      </div>
+
+      <div class="legal" style="margin-top:1.2rem">© <span id="year"></span> Waste2Wear — All rights reserved</div>
+    </div>
+  </footer>
+
+  <!-- Cart drawer (off-canvas) -->
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <strong>Cart</strong>
+      <div style="display:flex;gap:.6rem">
+        <button class="small" id="clearCart">Clear</button>
+        <button class="small" id="closeCart">Close</button>
+      </div>
+    </div>
+
+    <div id="cartList" style="overflow:auto;flex:1;min-height:120px;margin-top:.6rem"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6rem">
+      <div class="muted">Total</div>
+      <div style="font-weight:700" id="cartTotal">$0.00</div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;margin-top:.6rem">
+      <button class="small" id="checkoutBtn">Mock Checkout</button>
+      <button class="small" id="closeCart2">Continue</button>
+    </div>
+  </aside>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" role="dialog" aria-modal="true" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:120;">
+    <div id="loginBackdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.36)"></div>
+    <div style="position:relative;z-index:121;max-width:480px;width:100%;border-radius:14px;padding:1.2rem;background:var(--surface);box-shadow:var(--shadow)">
+      <strong>Login / Create account</strong>
+      <p class="muted" style="margin-top:.5rem">Enter name and email. (Demo login stored locally.)</p>
+      <form id="loginForm" style="margin-top:.8rem;display:grid;gap:.6rem" autocomplete="on">
+        <label class="muted">Name
+          <input id="loginName" name="name" autocomplete="name" required aria-required="true" style="width:100%;margin-top:.4rem;padding:.6rem;border-radius:8px;border:1px solid var(--muted)" />
+        </label>
+
+        <label class="muted">Email
+          <input id="loginEmail" name="email" type="email" autocomplete="email" required style="width:100%;margin-top:.4rem;padding:.6rem;border-radius:8px;border:1px solid var(--muted)" />
+        </label>
+
+        <label class="muted">Password
+          <input id="loginPassword" name="password" type="password" autocomplete="current-password" style="width:100%;margin-top:.4rem;padding:.6rem;border-radius:8px;border:1px solid var(--muted)" />
+        </label>
+
+        <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.6rem">
+          <button type="button" class="small" id="cancelLogin">Cancel</button>
+          <button class="small" id="submitLogin" type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /****************************************************************
+     * Rebuilt index.js (embedded)
+     * - Clean login: DOES NOT auto-open. Opens only on click. Closes on submit.
+     * - Theme toggles between light/dark (persisted).
+     * - Nav active state handled.
+     * - Products rendering (demo).
+     * - Cart drawer off-canvas (hidden by default).
+     *****************************************************************/
+
+    // helpers
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+
+    // demo products
+    const PRODUCTS = [
+      { id:'pendant-01', title:'Minimal Pendant', category:'pendant', price:45, description:'Minimal pendant printed from recycled filament.'},
+      { id:'keychain-01', title:'Upcycled Keychain', category:'keychain', price:25, description:'Sleek keychain, low-impact materials.'},
+      { id:'earrings-01', title:'Everyday Earrings', category:'earrings', price:35, description:'Lightweight, designed to last.'},
+      { id:'bracelet-01', title:'Handcrafted Bracelet', category:'bracelet', price:40, description:'Hand-finished bracelet.'}
+    ];
+
+    // state
+    const state = {
+      theme: localStorage.getItem('w2w_theme') || 'light',
+      cart: JSON.parse(localStorage.getItem('w2w_cart') || '[]'),
+      user: JSON.parse(localStorage.getItem('w2w_user') || 'null'),
+      category: 'all'
+    };
+
+    // init
+    document.addEventListener('DOMContentLoaded', () => {
+      // year
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // apply theme
+      applyTheme(state.theme);
+      // wire UI
+      wireUI();
+      renderProducts();
+      updateCartUI();
+      toggleCartVisibility();
+      renderUser();
+      setupReveal();
+      setNavActiveByPath();
+    });
+
+    // THEME
+    function applyTheme(mode){
+      const t = mode === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      state.theme = t;
+      localStorage.setItem('w2w_theme', t);
+      // swap icons
+      const sun = $('#sunIcon'), moon = $('#moonIcon');
+      if(t === 'dark'){ sun.classList.add('hide'); sun.classList.remove('show'); moon.classList.remove('hide'); moon.classList.add('show'); }
+      else { moon.classList.add('hide'); moon.classList.remove('show'); sun.classList.remove('hide'); sun.classList.add('show'); }
+    }
+    $('#themeToggle').addEventListener('click', ()=> applyTheme(state.theme === 'dark' ? 'light' : 'dark'));
+
+    // NAV active by path (basic)
+    function setNavActiveByPath(){
+      const path = location.pathname.split('/').pop() || 'index.html';
+      $$('.nav-link').forEach(a => a.classList.remove('active'));
+      const match = document.querySelector(`nav a[href="${path}"]`);
+      if(match) match.classList.add('active'); else document.querySelector('nav a[href="index.html"]').classList.add('active');
+    }
+
+    // PRODUCTS
+    function renderProducts(filter = 'all'){
+      state.category = filter;
+      const container = $('#productsGrid');
+      container.innerHTML = '';
+      const list = PRODUCTS.filter(p => filter === 'all' ? true : p.category === filter);
+      list.forEach(p => {
+        const card = document.createElement('article');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-media" aria-hidden="true">${mockSVG(p.category)}</div>
+          <div class="product-meta">
+            <div>
+              <div><a href="product.html#${p.id}" class="product-name">${p.title}</a></div>
+              <div class="muted" style="margin-top:.25rem">${p.description}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700">$${p.price.toFixed(2)}</div>
+              <div class="muted" style="font-size:.92rem">${p.category}</div>
+            </div>
+          </div>
+          <div class="product-actions" style="margin-top:.6rem">
+            <button class="small btn-add" data-id="${p.id}">Add to cart</button>
+            <button class="small btn-buy" data-id="${p.id}">Buy now</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      $$('.btn-add').forEach(b => b.addEventListener('click', e => { addToCart(e.currentTarget.dataset.id); }));
+      $$('.btn-buy').forEach(b => b.addEventListener('click', e => { addToCart(e.currentTarget.dataset.id); alert('Added to cart — redirecting to checkout (mock).'); location.href='checkout.html'; }));
+    }
+
+    function mockSVG(cat){
+      const c = '#CBBBA8';
+      if(cat==='pendant') return `<svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="28" fill="${c}"/></svg>`;
+      if(cat==='keychain') return `<svg width="140" height="140" viewBox="0 0 140 140"><rect x="34" y="46" width="72" height="44" rx="10" fill="${c}"/></svg>`;
+      if(cat==='earrings') return `<svg width="140" height="140" viewBox="0 0 140 140"><circle cx="48" cy="70" r="16" fill="${c}"/><circle cx="92" cy="70" r="16" fill="${c}"/></svg>`;
+      if(cat==='bracelet') return `<svg width="140" height="140" viewBox="0 0 140 140"><ellipse cx="70" cy="76" rx="36" ry="14" fill="${c}"/></svg>`;
+      return `<svg width="140" height="140" viewBox="0 0 140 140"><rect x="10" y="12" width="120" height="120" rx="14" fill="${c}"/></svg>`;
+    }
+
+    // CART
+    function saveCart(){ localStorage.setItem('w2w_cart', JSON.stringify(state.cart)); updateCartUI(); toggleCartVisibility(); }
+    function addToCart(id){
+      const p = PRODUCTS.find(x => x.id === id); if(!p) return;
+      state.cart.push({ id:p.id, title:p.title, price:p.price, qty:1, gift:false });
+      saveCart();
+      // small bounce
+      const el = document.querySelector('.cta-primary');
+      if(el) el.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:220});
+    }
+    function updateCartUI(){
+      const total = state.cart.reduce((s,i)=>s + (i.price*(i.qty||1)),0);
+      $('#cartTotal').textContent = `$${total.toFixed(2)}`;
+    }
+    function toggleCartVisibility(){ const drawer = $('#cartDrawer'); if(state.cart.length > 0) drawer.style.display = 'block'; else drawer.style.display = 'none'; }
+    $('#clearCart')?.addEventListener('click', ()=>{ if(confirm('Clear cart?')){ state.cart=[]; saveCart(); } });
+    $('#checkoutBtn')?.addEventListener('click', ()=> alert('Mock checkout — integrate backend later.'));
+
+    // LOGIN (RELIABLE)
+    function openLogin(){
+      // show modal only when explicitly called
+      $('#loginModal').style.display = 'flex';
+      $('#loginModal').setAttribute('aria-hidden','false');
+      setTimeout(()=> $('#loginName').focus(), 80);
+    }
+    function closeLogin(){
+      $('#loginModal').style.display = 'none';
+      $('#loginModal').setAttribute('aria-hidden','true');
+      $('#loginForm').reset();
+    }
+    function handleLoginSubmit(e){
+      e.preventDefault();
+      const name = $('#loginName').value.trim();
+      const email = $('#loginEmail').value.trim();
+      if(!name || !email){ alert('Please enter name and email'); return; }
+      const user = { name, email, loggedAt: Date.now() };
+      state.user = user;
+      localStorage.setItem('w2w_user', JSON.stringify(user));
+      closeLogin();
+      renderUser();
+    }
+
+    // Render user button / dropdown
+    function renderUser(){
+      const btn = $('#loginBtn');
+      if(state.user && state.user.name){
+        btn.textContent = 'Hi, ' + state.user.name.split(' ')[0];
+        btn.setAttribute('aria-expanded','false');
+        btn.onclick = toggleUserDropdown;
+      } else {
+        btn.textContent = 'Login';
+        btn.onclick = openLogin;
+        $('#userDropdown').style.display = 'none';
+      }
+    }
+
+    function toggleUserDropdown(){
+      const dd = $('#userDropdown');
+      const shown = dd.style.display === 'block';
+      dd.style.display = shown ? 'none' : 'block';
+      dd.setAttribute('aria-hidden', shown ? 'true' : 'false');
+    }
+
+    // UI wiring
+    function wireUI(){
+      // permanent listener on login button handled in renderUser()
+      $('#loginForm').addEventListener('submit', handleLoginSubmit);
+      $('#cancelLogin').addEventListener('click', closeLogin);
+      $('#loginBackdrop').addEventListener('click', closeLogin);
+
+      // user dropdown actions
+      $('#menuLogout').addEventListener('click', (ev)=>{ ev.preventDefault(); if(confirm('Logout?')){ state.user = null; localStorage.removeItem('w2w_user'); renderUser(); } $('#userDropdown').style.display='none'; });
+      $('#menuProfile').addEventListener('click', ()=> location.href='profile.html');
+      $('#menuOrders').addEventListener('click', ()=> location.href='orders.html');
+
+      // category select
+      $('#categorySelect')?.addEventListener('change', (e)=> { renderProducts(e.target.value); $('#openCategoryNewTab').href = 'shop.html?category='+e.target.value; });
+
+      // close dropdown when clicking outside
+      document.addEventListener('click', (ev)=>{ const uw = document.getElementById('userWrap'); if(uw && !uw.contains(ev.target)) $('#userDropdown').style.display = 'none'; });
+
+      // ESC closes modals
+      document.addEventListener('keydown', (ev)=>{ if(ev.key === 'Escape'){ closeLogin(); $('#userDropdown').style.display='none'; } });
+
+      // theme storage sync
+      window.addEventListener('storage', (ev)=>{ if(ev.key === 'w2w_theme') applyTheme(localStorage.getItem('w2w_theme')||'light'); if(ev.key === 'w2w_user') { state.user = JSON.parse(localStorage.getItem('w2w_user')||'null'); renderUser(); } if(ev.key === 'w2w_cart') { state.cart = JSON.parse(localStorage.getItem('w2w_cart')||'[]'); updateCartUI(); toggleCartVisibility(); } });
+    }
+
+    // reveal on scroll
+    function setupReveal(){
+      const items = Array.from(document.querySelectorAll('.reveal'));
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(ent => { if(ent.isIntersecting){ ent.target.classList.add('show'); obs.unobserve(ent.target); } });
+      }, {threshold: 0.12});
+      items.forEach(i => obs.observe(i));
+    }
+
+    // bootstrap small things
+    function setNavActiveOnClick(){
+      $$('.nav-link').forEach(a => a.addEventListener('click', () => { $$('.nav-link').forEach(x => x.classList.remove('active')); a.classList.add('active'); }));
+    }
+    setNavActiveOnClick();
+    wireUI();
+
+    // Expose minimal API for debugging
+    window.waste2wear = { state, renderProducts, addToCart };
+
+  </script>
+</body>
+</html>
