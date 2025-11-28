@@ -136,7 +136,7 @@
     .hero-bg{
       position:absolute;inset:0;background-size:cover;background-position:center;filter: blur(6px) saturate(.95);opacity:1;
       /* example illustrative image (unsplash-style) — replace later with your own images if desired */
-      background-image: url('https://static.fibre2fashion.com//articleresources/images/71/7074/SAdobeStock_247321133_Small.jpg');
+      background-image: url('https://www.shutterstock.com/image-photo/photo-collage-modern-gold-collection-260nw-2137735333.jpg');
     }
     .hero-overlay{
       position:absolute;inset:0;
@@ -309,7 +309,7 @@
   <header role="banner" aria-label="Waste 2 Wear header">
     <div class="container nav" style="align-items:center">
       <div class="brand">
-        <div class="logo-placeholder" aria-hidden="true">W2W</div>
+        <div class="logo-placeholder" aria-hidden="true"><img src = "C:\Users\HP\Downloads\w2w logo.png"></div>
         <div>
           <div class="site-title">Waste 2 Wear</div>
           <div class="muted" style="font-size:.9rem">Sustainable accessories</div>
@@ -426,7 +426,7 @@
       <div class="section-header">
         <div>
           <h2>The journey of a piece</h2>
-          <div class="muted" style="margin-top:.4rem">Swipe or scroll — watch the transformation.</div>
+          <div class="muted" style="margin-top:.4rem">Watch the transformation</div>
         </div>
       </div>
 
@@ -472,7 +472,7 @@
       <div class="section-header">
         <div>
           <h2>From material to object</h2>
-          <div class="muted" style="margin-top:.4rem">A few steps shown visually.</div>
+          <div class="muted" style="margin-top:.4rem"></div>
         </div>
       </div>
 
@@ -494,9 +494,8 @@
       <div class="section-header">
         <div>
           <h2>Shop Highlights</h2>
-          <div class="muted" style="margin-top:.4rem">Selected pieces — click the product name to open the product page.</div>
+          <div class="muted" style="margin-top:.4rem"></div>
         </div>
-
         <div style="display:flex;align-items:center;gap:.6rem">
           <label for="categorySelect" class="muted">Category</label>
           <select id="categorySelect" aria-label="Filter products">
@@ -518,7 +517,7 @@
       <div class="section-header">
         <div>
           <h2>Craftsmanship gallery</h2>
-          <div class="muted" style="margin-top:.4rem">Close details from production and finishing.</div>
+          <div class="muted" style="margin-top:.4rem"></div>
         </div>
       </div>
 
@@ -676,10 +675,10 @@
 
     // demo products
     const PRODUCTS = [
-      { id:'pendant-01', title:'Minimal Pendant', category:'pendant', price:45, description:'Minimal pendant printed from recycled filament.'},
-      { id:'keychain-01', title:'Upcycled Keychain', category:'keychain', price:25, description:'Sleek keychain, low-impact materials.'},
-      { id:'earrings-01', title:'Everyday Earrings', category:'earrings', price:35, description:'Lightweight, designed to last.'},
-      { id:'bracelet-01', title:'Handcrafted Bracelet', category:'bracelet', price:40, description:'Hand-finished bracelet.'}
+      { id:'pendant-01', title:'Pendant', category:'pendant', price:150, description:'Minimal pendant printed from recycled filament',img:"earrings.png"},
+      { id:'keychain-01', title:'Keychain', category:'keychain', price:120, description:'Sleek keychain, low-impact materials'},
+      { id:'earrings-01', title:'Everyday Earrings', category:'earrings', price:130, description:'Lightweight, designed to last'},
+      { id:'bracelet-01', title:'Bracelet', category:'bracelet', price:140, description:'Hand-finished bracelet'}
     ];
 
     // state
@@ -744,7 +743,7 @@
               <div class="muted" style="margin-top:.25rem">${p.description}</div>
             </div>
             <div style="text-align:right">
-              <div style="font-weight:700">$${p.price.toFixed(2)}</div>
+              <div style="font-weight:700">₹${p.price.toFixed(2)}</div>
               <div class="muted" style="font-size:.92rem">${p.category}</div>
             </div>
           </div>
